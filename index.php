@@ -2,54 +2,55 @@
 include 'db.php';
 include 'header.php';
 
-$sql = "SELECT id, name, email, phone, gender, password FROM users";
+// Get the user count from the users table
+$user_count_sql = "SELECT COUNT(*) as user_count FROM users";
+$user_count_result = $conn->query($user_count_sql);
+$user_count_row = $user_count_result->fetch_assoc();
+$user_count = $user_count_row['user_count'];
+
+// Get the library records
+$sql = "SELECT * FROM library";
 $result = $conn->query($sql);
 ?>
 
-<h2>Users List</h2>
-<a href="create.php" class="btn btn-primary mb-3">Add User</a>
+<h2>Library List</h2>
+<a href="library_create.php" class="btn btn-primary mb-3">Add Library</a>
 
 <style>
     .operations {
         display: flex;
-        gap: 5px;
+        gap: 10px;
     }
 </style>
 
-<table class="table table-bordered m-1">
+<table class="table table-bordered">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Email</th>
+            <th>No of Users</th>
+            <th>No of Books</th>
             <th>Phone</th>
-            <th>Gender</th>
-            <th>Password</th>
+            <th>Address</th>
             <th>Operations</th>
         </tr>
     </thead>
     <tbody>
         <?php
         if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
+            while($row = $result->fetch_assoc()) {
                 echo "<tr>
-                        <td>" . $row["name"] . "</td>
-                        <td>" . $row["email"] . "</td>
-                        <td>" . $row["phone"] . "</td>
-                        <td>" . $row["gender"] . "</td>
-                        <td>" . $row["password"] . "</td>
+                        <td>".$row["no_of_users"]."</td>
+                        <td>".$row["no_of_books"]."</td>
+                        <td>".$row["phone"]."</td>
+                        <td>".$row["address"]."</td>
                         <td class='operations'>
-
-                            <a href='update.php?id=" . $row["id"] . "' class='btn btn-sm btn-warning'>Edit</a> 
-                            <a href='delete.php?id=" . $row["id"] . "' class='btn btn-sm btn-danger'>Delete</a>
+                            <a href='library_update.php?id=".$row["id"]."' class='btn btn-warning'>Edit</a> 
                         </td>
                       </tr>";
             }
         } else {
-            echo "<tr><td colspan='4'>No users found</td></tr>";
+            echo "<tr><td colspan='5'>No libraries found</td></tr>";
         }
         $conn->close();
         ?>
     </tbody>
 </table>
-
-<?php include 'footer.php'; ?>

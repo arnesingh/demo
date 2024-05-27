@@ -11,8 +11,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $phone = $_POST['phone'];
     $gender = $_POST['gender'];
-    $password = $_POST['password'];
-    $library_id = $_POST['library_id'];
+    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+        $library_id = $_POST['library_id'];
 
     // Insert the user into the users table
     $sql = "INSERT INTO users (name, email, phone, gender, password, library_id) VALUES ('$name', '$email', '$phone', '$gender', '$password', '$library_id')";

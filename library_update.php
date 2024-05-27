@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($conn->query($sql) === TRUE) {
         echo "Record updated successfully";
-        header('Location: library_index.php'); // Redirect to the library list
+        header('Location: index.php'); // Redirect to the library list
     } else {
         echo "Error updating record: " . $conn->error;
     }

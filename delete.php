@@ -19,7 +19,7 @@ if (isset($_GET['id'])) {
         $conn->query($decrement_sql);
 
         echo "User deleted successfully";
-        header('Location: user_index.php'); // Redirect to the user list
+        header('Location: index.php'); // Redirect to the user list
     } else {
         echo "Error deleting user: " . $conn->error;
     }

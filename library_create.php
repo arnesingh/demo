@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($conn->query($sql) === TRUE) {
         echo "New record created successfully";
-        header('Location: library_index.php'); // Redirect to the library list
+        header('Location: index.php'); // Redirect to the library list
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
