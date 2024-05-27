@@ -2,28 +2,26 @@
 include 'db.php';
 include 'header.php';
 
-// Fetch libraries for the dropdown
-$library_sql = "SELECT id, address FROM library";
-$library_result = $conn->query($library_sql);
+$library_id = isset($_GET['library_id']) ? $_GET['library_id'] : '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['name'];
     $email = $_POST['email'];
     $phone = $_POST['phone'];
     $gender = $_POST['gender'];
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
-        $library_id = $_POST['library_id'];
+    $password = $_POST['password'];
+    $library_id = $_POST['library_id'];
 
-    // Insert the user into the users table
+    // Insert the new user into the users table
     $sql = "INSERT INTO users (name, email, phone, gender, password, library_id) VALUES ('$name', '$email', '$phone', '$gender', '$password', '$library_id')";
 
     if ($conn->query($sql) === TRUE) {
-        // Increment the no_of_users in the selected library
-        $increment_sql = "UPDATE library SET no_of_users = no_of_users + 1 WHERE id = $library_id";
-        $conn->query($increment_sql);
+        // Increment the number of users in the selected library
+        $update_library_sql = "UPDATE library SET no_of_users = no_of_users + 1 WHERE id=$library_id";
+        $conn->query($update_library_sql);
 
         echo "New user created successfully";
-        header('Location: index.php'); // Redirect to the user list
+        header('Location: library_users.php?library_id=' . $library_id); // Redirect to the library's user list
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
@@ -33,7 +31,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <h2>Create User</h2>
-<form id="userForm" method="post">
+<form method="post">
+    <input type="hidden" name="library_id" value="<?php echo $library_id; ?>">
     <div class="form-group">
         <label for="name">Name:</label>
         <input type="text" class="form-control" name="name" required>
@@ -49,28 +48,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="form-group">
         <label for="gender">Gender:</label>
         <select class="form-control" name="gender" required>
-            <option value="">Select</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
-            <option value="Other">Other</option>
         </select>
     </div>
     <div class="form-group">
         <label for="password">Password:</label>
         <input type="password" class="form-control" name="password" required>
-    </div>
-    <div class="form-group">
-        <label for="library_id">Library:</label>
-        <select class="form-control" name="library_id" required>
-            <option value="">Select a library</option>
-            <?php
-            if ($library_result->num_rows > 0) {
-                while($row = $library_result->fetch_assoc()) {
-                    echo "<option value='".$row["id"]."'>".$row["address"]."</option>";
-                }
-            }
-            ?>
-        </select>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
